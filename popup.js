@@ -33,6 +33,9 @@ function getBechdelResults(id){
       if(response.status == '403'){
       	renderMessage("This move is not yet in the bechdeltest.com database", 'status');
       }
+      else if(response.status == '404'){
+        renderMessage('This is not a movie page', 'status')
+      }
       else if(response.rating == '3'){
       	renderMessage('This movie passes the bechdeltest!', 'status');
       }
@@ -42,10 +45,10 @@ function getBechdelResults(id){
       else if(response.rating == '1'){
       	renderMessage('This movie features two women, but they don\'t talk', 'status');
       }
-      else{
+      else if(response.rating == '0'){
       	renderMessage('This movie does not feature two women', 'status')
       }
-    }
+     }
   };
   xhr.open("GET", url, true);
   xhr.send();
@@ -59,15 +62,27 @@ function renderMessage(statusText, elementID) {
 }
 
 function getIMDbID(url){
-  var regex = /\d{7}/;
-  var id = url.match(regex)[0];
-  return id;
+  var regex = /t{2}\d{7}/;
+
+  if(url.includes('title')){
+    console.log("hi")
+    var id = url.match(regex)[0];
+    var scrubID = id.slice(2);
+  }
+  else{
+    scrubID = 0;
+  }
+  console.log(scrubID);
+  return scrubID;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
     if(url.slice(7,19) === "www.imdb.com"){
       getBechdelResults(getIMDbID(url));
+    }
+    else{
+      renderMessage("You are not currently at imdb.com", 'status');
     }
   });
 });
