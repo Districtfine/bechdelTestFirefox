@@ -30,22 +30,22 @@ function getBechdelResults(id){
       var response = JSON.parse(this.responseText);
 
       if(id == 0){
-        renderMessage("This is not a movie page", 'status');
+        sendMessage("This is not a movie page", 'status');
       }
       else if(response.status == '403' || response.status == '404'){
-      	renderMessage("This movie is not yet in the bechdeltest.com database", 'status');
+      	sendMessage("This movie is not yet in the bechdeltest.com database", 'status');
       }
       else if(response.rating == '3'){
-      	renderMessage('This movie passes the bechdeltest!', 'status');
+      	sendMessage('This movie passes the bechdeltest!', 'status');
       }
       else if(response.rating == '2'){
-      	renderMessage('This movie features two women talking, but about a man', 'status');
+      	sendMessage('This movie features two women talking, but about a man', 'status');
       }
       else if(response.rating == '1'){
-      	renderMessage('This movie features two women, but they don\'t talk', 'status');
+      	sendMessage('This movie features two women, but they don\'t talk', 'status');
       }
       else if(response.rating == '0'){
-      	renderMessage('This movie does not feature two women', 'status')
+      	sendMessage('This movie does not feature two women', 'status')
       }
      }
   };
@@ -56,7 +56,7 @@ function getBechdelResults(id){
 }
 
 
-function renderMessage(statusText, elementID) {
+function sendMessage(statusText, elementID) {
   document.getElementById(elementID).textContent = statusText;
 }
 
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
       getBechdelResults(getIMDbID(url));
     }
     else{
-      renderMessage("You are not currently at imdb.com", 'status');
+      sendMessage("You are not currently at imdb.com", 'status');
     }
   });
 });
