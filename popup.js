@@ -29,12 +29,11 @@ function getBechdelResults(id){
       console.log("ready state is: " + this.readyState);
       var response = JSON.parse(this.responseText);
 
-      console.log(response.status);
-      if(response.status == '403'){
-      	renderMessage("This move is not yet in the bechdeltest.com database", 'status');
+      if(id == 0){
+        renderMessage("This is not a movie page", 'status');
       }
-      else if(response.status == '404'){
-        renderMessage('This is not a movie page', 'status')
+      else if(response.status == '403' || response.status == '404'){
+      	renderMessage("This movie is not yet in the bechdeltest.com database", 'status');
       }
       else if(response.rating == '3'){
       	renderMessage('This movie passes the bechdeltest!', 'status');
@@ -63,16 +62,13 @@ function renderMessage(statusText, elementID) {
 
 function getIMDbID(url){
   var regex = /t{2}\d{7}/;
-
   if(url.includes('title')){
-    console.log("hi")
     var id = url.match(regex)[0];
     var scrubID = id.slice(2);
   }
   else{
     scrubID = 0;
   }
-  console.log(scrubID);
   return scrubID;
 }
 
