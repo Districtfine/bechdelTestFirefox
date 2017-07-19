@@ -1,10 +1,14 @@
 //stuck on getting results from getBechdelResults into the response
-browser.runtime.onMessage.addListener(function (request, sender, sendResponse){
+browser.runtime.onMessage.addListener(function respondToMessage (request, sender, sendResponse){
   getCurrentTabUrl(function(url) {
-    getBechdelResults(getIMDbID(url));
+    getBechdelResults(getIMDbID(url), function sendRating (rating){
+      console.log("Request was: " + request + " and rating was " + rating );
+      sendResponse(rating);
+    });
   });
-  
+  return true;
 });
+
 
 
 function getCurrentTabUrl(callback) {
@@ -41,6 +45,7 @@ function getBechdelResults(id, callback){
       else{ 
         ratingResponse = response.rating;
       }
+      callback(ratingResponse);
      }
   };
   xhr.open("GET", url, true);
