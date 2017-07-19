@@ -1,3 +1,11 @@
+//stuck on getting results from getBechdelResults into the response
+browser.runtime.onMessage.addListener(function (request, sender, sendResponse){
+  getCurrentTabUrl(function(url) {
+    getBechdelResults(getIMDbID(url));
+  });
+  
+});
+
 
 function getCurrentTabUrl(callback) {
   var queryInfo = {
@@ -8,7 +16,6 @@ function getCurrentTabUrl(callback) {
   browser.tabs.query(queryInfo, function(tabs) {
     var tab = tabs[0];
     var url = tab.url;
-
     console.assert(typeof url == 'string', 'tab.url should be a string');
 
     callback(url);
@@ -16,49 +23,31 @@ function getCurrentTabUrl(callback) {
 }
 
 
-function makeXMLHttpRequest(url){
-  
-}
-
-function getBechdelResults(id){
+function getBechdelResults(id, callback){
   var url = 'http://bechdeltest.com/api/v1/getMovieByImdbId?imdbid=' + id;
 
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if(this.readyState == 4){
-      console.log("ready state is: " + this.readyState);
       var response = JSON.parse(this.responseText);
-
+      
+      var ratingResponse = -3;
       if(id == 0){
-        sendMessage("This is not a movie page", 'status');
+        ratingResponse = -2;
       }
       else if(response.status == '403' || response.status == '404'){
-      	sendMessage("This movie is not yet in the bechdeltest.com database", 'status');
+        ratingResponse = -1;
       }
-      else if(response.rating == '3'){
-      	sendMessage('This movie passes the bechdeltest!', 'status');
-      }
-      else if(response.rating == '2'){
-      	sendMessage('This movie features two women talking, but about a man', 'status');
-      }
-      else if(response.rating == '1'){
-      	sendMessage('This movie features two women, but they don\'t talk', 'status');
-      }
-      else if(response.rating == '0'){
-      	sendMessage('This movie does not feature two women', 'status')
+      else{ 
+        ratingResponse = response.rating;
       }
      }
   };
   xhr.open("GET", url, true);
   xhr.send();
-  console.log("hi")
-
 }
 
 
-function sendMessage(statusText, elementID) {
-  document.getElementById(elementID).textContent = statusText;
-}
 
 function getIMDbID(url){
   var regex = /t{2}\d{7}/;
@@ -71,14 +60,3 @@ function getIMDbID(url){
   }
   return scrubID;
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl(function(url) {
-    if(url.slice(7,19) === "www.imdb.com"){
-      getBechdelResults(getIMDbID(url));
-    }
-    else{
-      sendMessage("You are not currently at imdb.com", 'status');
-    }
-  });
-});

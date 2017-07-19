@@ -10,19 +10,19 @@
 	},
 
   "background": {
-    "scripts": ["eventPage.js"],
-    "persistent": false
+    "scripts": ["background.js"],
+    "persistant": false
   },
 
   "content_scripts": [
     {
-      "matches": ["*://imdb.com/title/*"],
-      "scripts": ["content.js"]
+      "matches": ["*://www.imdb.com/title/*"],
+      "js": ["content.js"]
     }
   ],
   
   "permissions": [
-    "activeTab",
+    "tabs",
     "webRequest",
     "http://bechdeltest.com/*"
   ]
