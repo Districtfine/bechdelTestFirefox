@@ -1,9 +1,7 @@
-//stuck on getting results from getBechdelResults into the response
 browser.runtime.onMessage.addListener(function respondToMessage (request, sender, sendResponse){
   getCurrentTabUrl(function(url) {
-    getBechdelResults(getIMDbID(url), function sendRating (rating){
-      console.log("Request was: " + request + " and rating was " + rating );
-      sendResponse(rating);
+    getBechdelResults(getIMDbID(url), function sendRating (response){
+      sendResponse(response);
     });
   });
   return true;
@@ -26,7 +24,7 @@ function getCurrentTabUrl(callback) {
   });
 }
 
-
+//Make XML HTTP Request to bechdeltest.com to find the specific movie that is being requested
 function getBechdelResults(id, callback){
   var url = 'http://bechdeltest.com/api/v1/getMovieByImdbId?imdbid=' + id;
 
@@ -35,17 +33,17 @@ function getBechdelResults(id, callback){
     if(this.readyState == 4){
       var response = JSON.parse(this.responseText);
       
-      var ratingResponse = -3;
-      if(id == 0){
+      var ratingResponse = -3; //initialize
+      if(id == 0){//if the page is not a movie page
         ratingResponse = -2;
       }
       else if(response.status == '403' || response.status == '404'){
         ratingResponse = -1;
       }
-      else{ 
+      else{ //
         ratingResponse = response.rating;
       }
-      callback(ratingResponse);
+      callback(response);
      }
   };
   xhr.open("GET", url, true);
@@ -53,9 +51,9 @@ function getBechdelResults(id, callback){
 }
 
 
-
+//parse URL and extract IMDb ID
 function getIMDbID(url){
-  var regex = /t{2}\d{7}/;
+  var regex = /t{2}\d{7}/; //tt followed by 7 digits
   if(url.includes('title')){
     var id = url.match(regex)[0];
     var scrubID = id.slice(2);
