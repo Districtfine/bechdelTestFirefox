@@ -25,5 +25,10 @@
     "tabs",
     "webRequest",
     "http://bechdeltest.com/*"
+  ],
+
+  "web_accessible_resources": [
+    "icons/x_mark.png",
+    "icons/yes_mark.png"
   ]
 }
