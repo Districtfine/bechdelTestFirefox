@@ -4,6 +4,7 @@ browser.runtime.onMessage.addListener(function respondToMessage (request, sender
       sendResponse(response);
     });
   });
+	//make sure messaging is asyncyronous
   return true;
 });
 
