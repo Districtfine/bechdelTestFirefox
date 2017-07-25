@@ -33,16 +33,6 @@ function getBechdelResults(id, callback){
     if(this.readyState == 4){
       var response = JSON.parse(this.responseText);
       
-      var ratingResponse = -3; //initialize
-      if(id == 0){//if the page is not a movie page
-        ratingResponse = -2;
-      }
-      else if(response.status == '403' || response.status == '404'){
-        ratingResponse = -1;
-      }
-      else{ //
-        ratingResponse = response.rating;
-      }
       callback(response);
      }
   };

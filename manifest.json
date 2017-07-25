@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "icons":{
-		"48": "icon.png"
+		"48": "icons/yes_mark.png"
 	},
 
   "background": {
@@ -29,6 +29,7 @@
 
   "web_accessible_resources": [
     "icons/x_mark.png",
-    "icons/yes_mark.png"
+    "icons/yes_mark.png",
+		"icons/question_mark.png"
   ]
 }
